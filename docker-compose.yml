@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  chirpstack-ttn-bridge:
+    build: .
+    image: chirpstack-ttn-bridge:latest
+    container_name: chirpstack-ttn-bridge
+    restart: unless-stopped
+    environment:
+      # TTN Configuration
+      - TTN_SERVER=eu1.cloud.thethings.network
+      - TTN_PORT=1700
+      
+      # ChirpStack MQTT Configuration
+      - CHIRPSTACK_MQTT_HOST=mosquitto
+      - CHIRPSTACK_MQTT_PORT=1883
+      - CHIRPSTACK_MQTT_USER=
+      - CHIRPSTACK_MQTT_PASS=
+      
+      # MQTT Topic (change region prefix if needed)
+      - MQTT_TOPIC=eu868/gateway/+/event/up
+    
+    # Connect to ChirpStack's Docker network
+    networks:
+      - chirpstack-docker_default
+
+# Use existing ChirpStack network
+networks:
+  chirpstack-docker_default:
+    external: true
+
